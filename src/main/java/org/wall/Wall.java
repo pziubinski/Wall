@@ -17,31 +17,63 @@ public class Wall implements Structure {
 
     @Override
     public Optional<Block> findBlockByColor(String color) {
-        return Optional.empty();
+        return findBlocksByColorInCompositeBlock(blocks, color);
+    }
+
+    private Optional<Block> findBlocksByColorInCompositeBlock(List<Block> blocks, String color) {
+       Optional<Block> result = Optional.empty();
+
+        for (Block block : blocks) {
+            if (block.getColor().equals(color)) {
+                result = Optional.of(block);
+                break;
+            }
+            if (block instanceof CompositeBlock) {
+                result = findBlocksByColorInCompositeBlock(((CompositeBlock) block).getBlocks(), color);
+                if (result.isPresent()) {
+                    break;
+                }
+            }
+        }
+
+        return result;
     }
 
     @Override
     public List<Block> findBlocksByMaterial(String material) {
-        return null;
+        return findBlocksByMaterialInCompositeBlock(blocks, material);
+    }
+
+    private List<Block> findBlocksByMaterialInCompositeBlock(List<Block> blocks, String material) {
+        List<Block> result = new LinkedList<>();
+
+        for (Block block : blocks) {
+            if (block.getMaterial().equals(material)) {
+                result.add(block);
+            }
+            if (block instanceof CompositeBlock) {
+                result.addAll(findBlocksByMaterialInCompositeBlock(((CompositeBlock) block).getBlocks(), material));
+            }
+        }
+
+        return result;
     }
 
     @Override
     public int count() {
-        return compositeCount(blocks, new LinkedList<>());
+        return countInCompositeBlock(blocks);
     }
 
-    private int compositeCount(List<Block> blockList, List<Block> visited) {
-        int count = blockList.size();
+    private int countInCompositeBlock(List<Block> blocks) {
+        int count = 0;
 
-        for (Block block : blockList) {
-            if (visited.contains(block)) {
-                // skip counting this block to avoid infinite recursion
-                continue;
+        for (Block block : blocks) {
+            if (!block.getMaterial().isEmpty()) {
+                count++;
             }
-            visited.add(block);
-
             if (block instanceof CompositeBlock) {
-                count += compositeCount(((CompositeBlock) block).getBlocks(), visited);
+                count += countInCompositeBlock(((CompositeBlock) block).getBlocks());
+
             }
         }
 
