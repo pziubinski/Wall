@@ -68,13 +68,10 @@ public class Wall implements Structure {
         int count = 0;
 
         for (Block block : blocks) {
-            if (!block.getMaterial().isEmpty()) {
-                count++;
-            }
             if (block instanceof CompositeBlock) {
                 count += countInCompositeBlock(((CompositeBlock) block).getBlocks());
-
             }
+            count++;
         }
 
         return count;
