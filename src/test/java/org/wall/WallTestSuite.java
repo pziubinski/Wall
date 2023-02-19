@@ -122,9 +122,12 @@ class WallTestSuite {
         wall.addBlock(block1);
         wall.addBlock(block2);
 
+        int concrete = wall.findBlocksByMaterial("concrete").size();
+        int wood = wall.findBlocksByMaterial("wood").size();
+
         //THEN
-        assertEquals(1, wall.findBlocksByMaterial("concrete").size());
-        assertEquals(1, wall.findBlocksByMaterial("wood").size());
+        assertEquals(1, concrete);
+        assertEquals(1, wood);
     }
 
     @Test
@@ -132,9 +135,12 @@ class WallTestSuite {
         //WHEN
         wall.addBlock(compositeBlock1);
 
+        int concrete = wall.findBlocksByMaterial("concrete").size();
+        int wood = wall.findBlocksByMaterial("wood").size();
+
         //THEN
-        assertEquals(2, wall.findBlocksByMaterial("concrete").size());
-        assertEquals(1, wall.findBlocksByMaterial("wood").size());
+        assertEquals(2, concrete);
+        assertEquals(1, wood);
     }
 
     @Test
@@ -142,9 +148,12 @@ class WallTestSuite {
         //WHEN
         wall.addBlock(compositeBlock2);
 
+        int concrete = wall.findBlocksByMaterial("concrete").size();
+        int wood = wall.findBlocksByMaterial("wood").size();
+
         //THEN
-        assertEquals(3, wall.findBlocksByMaterial("concrete").size());
-        assertEquals(3, wall.findBlocksByMaterial("concrete").size());
+        assertEquals(3, concrete);
+        assertEquals(1, wood);
     }
 
     @Test
@@ -152,8 +161,16 @@ class WallTestSuite {
         //WHEN
         wall.addBlock(compositeBlock3);
 
+        int concrete = wall.findBlocksByMaterial("concrete").size();
+        int wood = wall.findBlocksByMaterial("wood").size();
+        int iron = wall.findBlocksByMaterial("iron").size();
+        int clay = wall.findBlocksByMaterial("clay").size();
+
         //THEN
-        assertEquals(3, wall.findBlocksByMaterial("concrete").size());
+        assertEquals(3, concrete);
+        assertEquals(1, wood);
+        assertEquals(1, iron);
+        assertEquals(1, clay);
     }
 
     @Test
@@ -162,8 +179,10 @@ class WallTestSuite {
         wall.addBlock(block1);
         wall.addBlock(block2);
 
+        int count = wall.count();
+
         //THEN
-        assertEquals(2, wall.count());
+        assertEquals(2, count);
     }
 
     @Test
@@ -171,8 +190,10 @@ class WallTestSuite {
         //WHEN
         wall.addBlock(compositeBlock1);
 
+        int count = wall.count();
+
         //THEN
-        assertEquals(3, wall.count());
+        assertEquals(3, count);
     }
 
     @Test
@@ -180,8 +201,10 @@ class WallTestSuite {
         //WHEN
         wall.addBlock(compositeBlock2);
 
+        int count = wall.count();
+
         //THEN
-        assertEquals(4, wall.count());
+        assertEquals(4, count);
     }
 
     @Test
@@ -189,7 +212,9 @@ class WallTestSuite {
         //WHEN
         wall.addBlock(compositeBlock3);
 
+        int count = wall.count();
+
         //THEN
-        assertEquals(6, wall.count());
+        assertEquals(6, count);
     }
 }
