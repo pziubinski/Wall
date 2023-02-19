@@ -1,30 +1,22 @@
 package org.wall;
 
+import java.util.LinkedList;
 import java.util.List;
 
-public class CompositeBlockImpl implements CompositeBlock {
-    private final String color;
-    private final String material;
-    private final List<Block> blocks;
+public class CompositeBlockImpl extends BlockImpl implements CompositeBlock {
 
-    public CompositeBlockImpl(String color, String material, List<Block> blocks) {
-        this.color = color;
-        this.material = material;
-        this.blocks = blocks;
-    }
+    private List<Block> blocks = new LinkedList<>();
 
-    @Override
-    public String getColor() {
-        return color;
-    }
-
-    @Override
-    public String getMaterial() {
-        return material;
+    public CompositeBlockImpl(String color, String material) {
+        super(color, material);
     }
 
     @Override
     public List<Block> getBlocks() {
         return blocks;
+    }
+
+    public void addBlock(Block block) {
+        blocks.add(block);
     }
 }

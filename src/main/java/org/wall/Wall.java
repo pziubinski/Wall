@@ -27,13 +27,24 @@ public class Wall implements Structure {
 
     @Override
     public int count() {
-        int counter = blocks.size();
+        return compositeCount(blocks, new LinkedList<>());
+    }
 
-        for (Block block : blocks) {
+    private int compositeCount(List<Block> blockList, List<Block> visited) {
+        int count = blockList.size();
+
+        for (Block block : blockList) {
+            if (visited.contains(block)) {
+                // skip counting this block to avoid infinite recursion
+                continue;
+            }
+            visited.add(block);
+
             if (block instanceof CompositeBlock) {
-                counter += ((CompositeBlock) block).getBlocks().size();
+                count += compositeCount(((CompositeBlock) block).getBlocks(), visited);
             }
         }
-        return counter;
+
+        return count;
     }
 }
