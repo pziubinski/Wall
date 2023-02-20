@@ -3,6 +3,7 @@ package org.wall;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Wall implements Structure {
     private List<Block> blocks;
@@ -21,22 +22,17 @@ public class Wall implements Structure {
     }
 
     private Optional<Block> findBlocksByColorInCompositeBlock(List<Block> blocks, String color) {
-       Optional<Block> result = Optional.empty();
 
-        for (Block block : blocks) {
-            if (block.getColor().equals(color)) {
-                result = Optional.of(block);
-                break;
-            }
-            if (block instanceof CompositeBlock) {
-                result = findBlocksByColorInCompositeBlock(((CompositeBlock) block).getBlocks(), color);
-                if (result.isPresent()) {
-                    break;
-                }
-            }
-        }
-
-        return result;
+        return blocks.stream()
+               .filter(block -> block.getColor().equals(color))
+               .findFirst()
+               .or(() -> blocks.stream()
+                       .filter(block -> block instanceof CompositeBlock)
+                       .map(block -> findBlocksByColorInCompositeBlock( ((CompositeBlock) block).getBlocks(), color ))
+                       .filter(Optional::isPresent)
+                       .map(Optional::get)
+                       .findFirst()
+               );
     }
 
     @Override
@@ -47,14 +43,15 @@ public class Wall implements Structure {
     private List<Block> findBlocksByMaterialInCompositeBlock(List<Block> blocks, String material) {
         List<Block> result = new LinkedList<>();
 
-        for (Block block : blocks) {
-            if (block.getMaterial().equals(material)) {
-                result.add(block);
-            }
-            if (block instanceof CompositeBlock) {
-                result.addAll(findBlocksByMaterialInCompositeBlock(((CompositeBlock) block).getBlocks(), material));
-            }
-        }
+        blocks.stream()
+                .forEach(block -> {
+                    if (block.getMaterial().equals(material)) {
+                        result.add(block);
+                    }
+                    if (block instanceof CompositeBlock) {
+                        result.addAll(findBlocksByMaterialInCompositeBlock(((CompositeBlock) block).getBlocks(), material));
+                    }
+                });
 
         return result;
     }
@@ -65,15 +62,16 @@ public class Wall implements Structure {
     }
 
     private int countInCompositeBlock(List<Block> blocks) {
-        int count = 0;
+        AtomicInteger count = new AtomicInteger();
 
-        for (Block block : blocks) {
-            if (block instanceof CompositeBlock) {
-                count += countInCompositeBlock(((CompositeBlock) block).getBlocks());
-            }
-            count++;
-        }
+        blocks.stream()
+                .forEach(block -> {
+                    if (block instanceof CompositeBlock) {
+                        count.addAndGet(countInCompositeBlock(((CompositeBlock) block).getBlocks()));
+                    }
+                    count.getAndIncrement();
+                });
 
-        return count;
+        return count.get();
     }
 }
