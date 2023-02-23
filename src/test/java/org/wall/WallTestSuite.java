@@ -47,10 +47,11 @@ class WallTestSuite {
         Optional<Block> white = wall.findBlockByColor("white");
 
         //THEN
-        assertFalse(red.isPresent());
-
-        assertTrue(white.isPresent());
-        assertEquals(block1, white.get());
+        assertAll(
+                () -> assertFalse(red.isPresent()),
+                () -> assertTrue(white.isPresent()),
+                () -> assertEquals(block1, white.get())
+        );
     }
 
     @Test
@@ -63,13 +64,14 @@ class WallTestSuite {
         Optional<Block> white = wall.findBlockByColor("white");
 
         //THEN
-        assertFalse(red.isPresent());
+        assertAll(
+                () -> assertFalse(red.isPresent()),
+                () -> assertTrue(grey.isPresent()),
+                () -> assertEquals(compositeBlock1, grey.get()),
+                () -> assertTrue(white.isPresent()),
+                () -> assertEquals(block1, white.get())
+        );
 
-        assertTrue(grey.isPresent());
-        assertEquals(compositeBlock1, grey.get());
-
-        assertTrue(white.isPresent());
-        assertEquals(block1, white.get());
     }
 
     @Test
@@ -82,14 +84,14 @@ class WallTestSuite {
         Optional<Block> white = wall.findBlockByColor("white");
 
         //THEN
-        assertTrue(red.isPresent());
-        assertEquals(compositeBlock2, red.get());
-
-        assertTrue(grey.isPresent());
-        assertEquals(compositeBlock1, grey.get());
-
-        assertTrue(white.isPresent());
-        assertEquals(block1, white.get());
+        assertAll(
+                () -> assertTrue(red.isPresent()),
+                () -> assertEquals(compositeBlock2, red.get()),
+                () -> assertTrue(grey.isPresent()),
+                () -> assertEquals(compositeBlock1, grey.get()),
+                () -> assertTrue(white.isPresent()),
+                () -> assertEquals(block1, white.get())
+        );
     }
 
     @Test
@@ -103,17 +105,16 @@ class WallTestSuite {
         Optional<Block> orange = wall.findBlockByColor("orange");
 
         //THEN
-        assertTrue(orange.isPresent());
-        assertEquals(compositeBlock3, orange.get());
-
-        assertTrue(red.isPresent());
-        assertEquals(compositeBlock2, red.get());
-
-        assertTrue(grey.isPresent());
-        assertEquals(compositeBlock1, grey.get());
-
-        assertTrue(white.isPresent());
-        assertEquals(block1, white.get());
+        assertAll(
+                () -> assertTrue(orange.isPresent()),
+                () -> assertEquals(compositeBlock3, orange.get()),
+                () -> assertTrue(red.isPresent()),
+                () -> assertEquals(compositeBlock2, red.get()),
+                () -> assertTrue(grey.isPresent()),
+                () -> assertEquals(compositeBlock1, grey.get()),
+                () -> assertTrue(white.isPresent()),
+                () -> assertEquals(block1, white.get())
+        );
     }
 
     @Test
@@ -126,8 +127,10 @@ class WallTestSuite {
         int wood = wall.findBlocksByMaterial("wood").size();
 
         //THEN
-        assertEquals(1, concrete);
-        assertEquals(1, wood);
+        assertAll(
+                () -> assertEquals(1, concrete),
+                () -> assertEquals(1, wood)
+        );
     }
 
     @Test
@@ -139,8 +142,10 @@ class WallTestSuite {
         int wood = wall.findBlocksByMaterial("wood").size();
 
         //THEN
-        assertEquals(2, concrete);
-        assertEquals(1, wood);
+        assertAll(
+                () -> assertEquals(2, concrete),
+                () -> assertEquals(1, wood)
+        );
     }
 
     @Test
@@ -152,8 +157,10 @@ class WallTestSuite {
         int wood = wall.findBlocksByMaterial("wood").size();
 
         //THEN
-        assertEquals(3, concrete);
-        assertEquals(1, wood);
+        assertAll(
+                () -> assertEquals(3, concrete),
+                () -> assertEquals(1, wood)
+        );
     }
 
     @Test
@@ -167,10 +174,12 @@ class WallTestSuite {
         int clay = wall.findBlocksByMaterial("clay").size();
 
         //THEN
-        assertEquals(3, concrete);
-        assertEquals(1, wood);
-        assertEquals(1, iron);
-        assertEquals(1, clay);
+        assertAll(
+                () -> assertEquals(3, concrete),
+                () -> assertEquals(1, wood),
+                () -> assertEquals(1, iron),
+                () -> assertEquals(1, clay)
+        );
     }
 
     @Test
